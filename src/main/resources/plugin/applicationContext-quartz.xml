@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:component-scan base-package="cn.itsource.aisell.common" />
+    <!-- cron表达式:在每天早上8点到晚上8点期间每1分钟触发一次 -->
+    <!--value>0 0/1 8-20 * * ?</value -->
+    <!-- cron表达式:每5分钟触发一次 -->
+    <!-- <value>0 0/5 * * * ?</value> -->
+
+    <task:scheduled-tasks>
+        <!--
+            执行quartzJob里面的work方法，执行频率是cron表达式
+            0 0/1 * * * ?:每过一分钟执行一次
+            0/1 * * * * ?:每过一分钟执行一次
+         -->
+        <task:scheduled ref="quartzJob" method="work" cron="0 0/1 * * * ?" />
+    </task:scheduled-tasks>
+</beans>

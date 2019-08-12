@@ -1,0 +1,31 @@
+$txthaha  ,我确实很好
+
+## 如果没有传，它会原生展示
+${txt}haha  ,我确实很好
+
+## 如果我没有传值,那么这个就为展示出来
+$!{txt}haha  ,我确实很好xxxxxx
+
+${domain}Controller
+
+## 设置变量
+#set($person ="TOM")
+$!{person}
+
+## 逻辑判断
+#set($a = 10)
+
+#if($a <10)
+    你是个小孩子，以后要好好学习，天天向上
+    #elseif($a>10)
+    你是个大孩子,你需要好好学习，天天努力
+    #else
+    你不大不小的，你得好好长大
+#end
+
+##遍历
+#set($list = ["a", "b", "c"])
+
+#foreach($a in $list)
+    值为:${a}
+#end

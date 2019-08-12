@@ -1,0 +1,16 @@
+采购订单模块：
+    组合关系:强聚合【整体与部分不可分割】 -> 级联
+        保存:保证双方都可以找到对方
+    聚合关系:双向的多对一，一对多
+        级联:危险，不要乱配 | 单据(组合关系)【最强:级联增删改,孤儿删除】
+
+SpringMVC中日期处理
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    getDate()
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    setDate()
+    高级查询有时间(时分秒)
+        结束日期需要加一天： 大于等于开始时间，小于结束时间
+
+明细管理
+    http://www.easyui-extlib.com/ -> DataGrid-Edit -> 单元格编辑

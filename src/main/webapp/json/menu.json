@@ -1,0 +1,24 @@
+[{
+  "id":1,
+  "text":"基本数据",
+  "iconCls":"icon-save",
+  "children":[{
+    "text":"用户管理",
+    "url":"/employee/index"
+  },{
+    "text":"部门管理",
+    "url":"/department/index"
+  }]
+},{
+  "id":1,
+  "text":"基本数据",
+  "iconCls":"icon-save",
+  "children":[{
+    "text":"用户管理",
+    "url":"/employee/index"
+  },{
+    "text":"部门管理",
+    "url":"/department/index"
+  }]
+}]
+

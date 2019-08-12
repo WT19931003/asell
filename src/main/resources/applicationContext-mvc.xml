@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/mvc
+         http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    ">
+
+    <!-- 对静态资源进行放行 -->
+    <mvc:default-servlet-handler />
+    <!-- 扫描controller部分的包 -->
+    <!-- @Component组件, @Repository持久层, @Service业务逻辑层, and @Controller控制器 -->
+    <context:component-scan base-package="cn.itsource.aisell.web.controller" />
+    <context:component-scan base-package="cn.itsource.aisell.common" />
+    <!-- 添加mvc对@RequestMapping等注解的支持 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json; charset=UTF-8</value>
+                        <value>application/x-www-form-urlencoded; charset=UTF-8</value>
+                    </list>
+                </property>
+                <!-- No serializer:配置 objectMapper 为我们自定义扩展后的 CustomMapper,解决了返回对象有关系对象的报错问题 -->
+                <property name="objectMapper">
+                    <bean class="cn.itsource.aisell.common.CustomMapper"></bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 视图解析器 -->
+    <!-- ViewResolver 视图解析器 (struts2视图类型类似) -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 设置视图路径的前后缀，该配置可以让我们写视图路径的时候更简单。 -->
+        <!-- 希望跳转jsp是[/WEB-INF/views/前缀][xxx变量][.jsp后缀] -->
+        <!-- * @see #setPrefix -->
+        <property name="prefix" value="/WEB-INF/views/" />
+        <!-- * @see #setSuffix -->
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- 上传解析器 -->
+    <!-- 错误：提示告诉开发者你没有配置文件上传解析器。 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置上传文件的最大尺寸为1MB -->
+        <property name="maxUploadSize">
+            <value>1048576</value>
+        </property>
+    </bean>
+
+    <!-- 扫描easypoi的一些view:视图 -->
+    <context:component-scan base-package="cn.afterturn.easypoi.view" />
+    <!-- bean的视图解析器  p:order="0":顺序在最前面 -->
+    <bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"
+          p:order="0" />
+
+</beans>

@@ -1,0 +1,88 @@
+一.权限判断
+    1.在我们自定义的拦截中拿到所有权限
+        FilterChainDefinitionBuilder
+              List<Permission> permissions = permissionService.findAll();
+                    permissions.forEach(p -> {
+                        filterChainDefinitionMap.put(p.getUrl(), "perms["+p.getSn()+"]");
+                });
+     2.Session中保存当前登录用户
+        1.主体变成登录对象
+            new SimpleAuthenticationInfo(employee,password,salt,getName());
+        2.抽取工共类(得到与获取用户)
+            //1.拿到subject
+            Subject subject = SecurityUtils.getSubject();
+            //2.subject中拿到session
+            Session session = subject.getSession();
+      3.权限过滤
+        ①.拿到当前登录用户的所有权限
+             @Query("select distinct p.sn from Employee e join e.roles r join r.permissions p where e.id = ?1")
+        ②.Ajax请求与普通请求不一样
+            2.1 区别:Ajax请求不跳转，而普通请求要跳转
+                X-Requested-With:XMLHttpRequest -》 就是一个ajax请求
+            2.2 自定义一个Filter extends PermissionsAuthorizationFilter
+                    onAccessDenied{
+                        if(有 -》 X-Requested-With:XMLHttpRequest){
+                            返回  json -{success:false,msg:xxx}
+                        }else{
+                            和之前一样
+                        }
+                    }
+            2.3 配置用起来
+                <bean id="itsourceFilter" class="...xxxFilter" />
+                <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+                       ...
+                        <!-- 添加过滤器 -->
+                        <property name="filters">
+                            <map>
+                                <entry key="aiPerms" value-ref="itsourceAiSellPermissionsAuthorizationFilter"></entry>
+                            </map>
+                        </property>
+                    </bean>
+                    最后过滤:aiPerms[employee:index]
+
+二.菜单读取
+   ①. Menu{
+        ...
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name="parent_id")
+        @JsonIgnore  //生成json的时候不要管这个属性
+        private Menu parent;
+
+
+        @Transient //临时属性 -> 不交给jpa管理【我们需要自己去管理(才有权限)父菜单有哪些子菜单】
+        private List<Menu> children = new ArrayList<>();
+
+        getText(return name)
+    }
+
+    ②.JPQL拿到当前登录用户的所有菜单
+         @Query("select distinct p.menu from Employee e join e.roles r join r.permissions p where e.id = ?1")
+    ③.自己写逻辑把菜单结构搞出来
+        List<Menu> parentMenus = new ArrayList<>
+        for(Menu child in childrenMenus){
+            //1.根据子菜单拿到父菜单
+            //2.判断这个父菜单是否在集合中
+            //3.如果不在，把这个父菜单加到集合中
+            //4.把子菜单放回到父菜单
+        }
+
+三.如果没有这个权限，也不显示相应的按钮
+    <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+    <shiro:hasPermission name="employee:delete">
+        <a href="#" data-method="delete" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+    </shiro:hasPermission>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

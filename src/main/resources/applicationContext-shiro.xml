@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+    <!--  创建securityManager对象 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 代表咱们的验证规则与数据 -->
+        <property name="realm" ref="jpaRealm"/>
+    </bean>
+
+    <!-- 代表咱们的Realm -> 自定义的Realm -->
+    <bean id="jpaRealm" class="cn.itsource.aisell.shiro.JpaRealm">
+        <!-- 自定义的这个Realm的密码规则-->
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"/>
+                <property name="hashIterations" value="10" />
+            </bean>
+        </property>
+    </bean>
+
+
+    <!-- shiro中的bean的对象的生命周期 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <!-- 支持注解的权限判断，又必需要上面那个 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <!--
+        Spring对于shiro的权限过滤
+            这个id的名称必需和web.xml中的代理过滤器名称一致
+    -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 登录的路径: 如果你没有登录，就会跳到这个页面中来-->
+        <property name="loginUrl" value="/login"/>
+        <!--  登录成功后的主页面 ：只要登录成功，说会跳到这里来 -->
+        <property name="successUrl" value="/main"/>
+        <!-- 没有权限的时候会跳转到的页面 -->
+        <property name="unauthorizedUrl" value="/s/unauthorized.jsp"/>
+
+        <!-- 代表咱们的过滤由一个map对象来决定 ：filterChainDefinitionMap  -->
+        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap" />
+        <!-- 添加过滤器 -->
+        <property name="filters">
+            <map>
+                <entry key="aiPerms" value-ref="itsourceAiSellPermissionsAuthorizationFilter"></entry>
+            </map>
+        </property>
+    </bean>
+    <!-- 配置咱们自定义的权限过滤器 -->
+    <bean id="itsourceAiSellPermissionsAuthorizationFilter"
+          class="cn.itsource.aisell.shiro.ItsourceAiSellPermissionsAuthorizationFilter"></bean>
+
+    <!-- 调用另一个bean(filterChainDefinitionBuilder)的builderFilterChainDefinitionMap方法返回的对象 -->
+    <bean id="filterChainDefinitionMap"
+          factory-bean="filterChainDefinitionBuilder"
+          factory-method="builderFilterChainDefinitionMap" />
+    <!-- 拿到map的功能 -->
+    <bean id="filterChainDefinitionBuilder" class="cn.itsource.aisell.shiro.FilterChainDefinitionBuilder" />
+
+</beans>

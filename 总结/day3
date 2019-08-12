@@ -1,0 +1,43 @@
+增删改
+一.删除功能
+    1.注解删除事件
+    2.判断是否选中(没有选中给提示)
+    3.提示是否要进行删除(取消就什么不做)
+    4.通过Ajax进行删除
+        -> 后台返回  {success:true,msg:xxx}
+二.添加
+    1.准备好 dialog -> form
+    2.点击添加弹出dialog(模态框,居中,form清除,修改title)
+        展示密码框,启用它
+
+三.修改
+    1.判断是否选中(没有选中给提示)
+    2.点击添加弹出dialog(模态框,居中,form清除,修改title)
+        隐藏密码框,禁用它
+        回显数据（部门: row["department.id"] = row.department.id）
+四.保存
+    1.进行验证
+        用户名，密码，部门必填 / 两次密码一致 / 用户不能重复
+        用户不能重复: 自定义验证(访问后台使用同步)
+                      修改时(id):忽略自己的名称
+    2.添加和修改的路径不一样(id)
+        添加:/employee/save  修改:/employee/update?cmd=update
+
+五.数据丢失与n-to-n
+       @ModelAttribute("editEmployee") //每次访问之前都会先执行这个方法
+        public Employee beforeEdit(Long id,String cmd){
+            //只有修改才会传update这个值过来，以前只有修改会传这个数据
+            if(id!=null && "update".equals(cmd)){
+                //根据id拿到这个对象
+                Employee employee = employeeService.findOne(id);
+                //把对应的关连对象设置为null -》解决n-to-n的问题
+                employee.setDepartment(null);
+                return employee;
+            }
+            return null;
+        }
+
+        public ResultJson update(@ModelAttribute("editEmployee") Employee employee){..
+
+
+

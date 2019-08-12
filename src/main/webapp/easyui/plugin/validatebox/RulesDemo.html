@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Easyui扩展库 validatebox - 落阳 整理</title>
+    <link href="http://www.easyui-extlib.com/Content/Site.css" rel="stylesheet" />
+    <script src="http://www.easyui-extlib.com/Scripts/jquery/jquery-1.11.0.min.js"></script>
+    <script src="http://www.easyui-extlib.com/Scripts/jquery-extensions/jquery.jdirk.js"></script>
+    <link href="http://www.easyui-extlib.com/Scripts/jquery-easyui/jquery-easyui-1.4.3/themes/default/easyui.css" rel="stylesheet" />
+    <link href="http://www.easyui-extlib.com/Scripts/jquery-easyui/jquery-easyui-1.4.3/themes/icon.css" rel="stylesheet" />
+    <script src="http://www.easyui-extlib.com/Scripts/jquery-easyui/jquery-easyui-1.4.3/jquery.easyui.min.js"></script>
+    <script src="http://www.easyui-extlib.com/Scripts/jquery-easyui/jquery-easyui-1.4.3/locale/easyui-lang-zh_CN.js"></script>
+
+    <link href="http://www.easyui-extlib.com/Scripts/jquery-easyui-extensions/validatebox/jeasyui.extensions.validatebox.css" rel="stylesheet" />
+    <script src="http://www.easyui-extlib.com/Scripts/jquery-easyui-extensions/validatebox/jeasyui.extensions.validatebox.rules.js"></script>
+    <script>
+        $(function () {
+
+            $("#v12").validatebox({
+                validType: ['contains["2b"]']
+            });
+
+            $("#v13").validatebox({
+                validType: ['startsWith["2b"]']
+            });
+
+            $("#v14").validatebox({
+                validType: ['endsWith["2b"]']
+            });
+
+            $("#v15").validatebox({
+                validType: ['integerRange[10,21]']
+            });
+
+
+            $("#v17").validatebox({
+                //以指定ID的方式去匹配
+                //validType: ['equals["v16","id"]']
+                //,
+                //以jq选择器的方式去匹配
+                validType: ['equals["#v16","jquery"]']
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div class="easyui-panel" data-options="fit:true,border:false" style="padding:20px;">
+        <table border="0" style="width:100%;">
+            <tr style="height:70px;">
+                <td>
+                    只允许输入英文字母或数字
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['engNum']" />
+                </td>
+                <td>
+                    只允许汉字、英文字母或数字
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['chsEngNum']" />
+                    <br />
+                </td>
+                <td>
+                    验证是否为合法的用户名
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['name']" />
+                    <br />
+                </td>
+                <td>
+                    指定字符最小3长度
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['minLength[3]']" />
+                    <br />
+                </td>
+            </tr>
+            <tr style="height:70px;">
+                <td>
+                    指定字符最大5长度
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['maxLength[5]']" />
+                    <br />
+                </td>
+                <td>
+                    指定字符最小3长度、最大5长度
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['minLength[3]','maxLength[5]']" />
+                    <br />
+                </td>
+                <td>
+                    必须包含指定的内容
+                    <br />
+                    <input id="v12" class="easyui-validatebox" type="text" value="" />
+                    <br />
+                </td>
+                <td>
+                    以指定的字符开头
+                    <br />
+                    <input id="v13" class="easyui-validatebox" type="text" value="" />
+                    <br />
+                </td>
+            </tr>
+            <tr style="height:70px;">
+                <td>
+                    以指定的字符结束
+                    <br />
+                    <input id="v14" class="easyui-validatebox" type="text" value="" />
+                    <br />
+                </td>
+                <td>
+                    短日期(yyyy-MM-dd)格式
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['shortDate']" />
+                    <br />
+                </td>
+                <td>
+                    电话号码(中国)格式
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['tel']" />
+                    <br />
+                </td>
+                <td>
+                    移动电话号码(中国)格式
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['mobile']" />
+                    <br />
+                </td>
+            </tr>
+            <tr style="height:70px;">
+                <td>
+                    邮政编码(中国)格式
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['zipCode']" />
+                    <br />
+                </td>
+                <td>
+                    必须包含中文汉字
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['existChinese']" />
+                    <br />
+                </td>
+                <td>
+                    必须是纯中文汉字
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['chinese']" />
+                    <br />
+                </td>
+                <td>
+                    必须是纯英文字母
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['english']" />
+                    <br />
+                </td>
+            </tr>
+            <tr style="height:70px;">
+                <td>
+                    必须是合法的文件名(不能包含字符 \\/:*?\"<>|)
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['fileName']" />
+                    <br />
+                </td>
+                <td>
+                    必须是正确的 IP地址v4 格式
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['ip']" />
+                    <br />
+                </td>
+                <td>
+                    必须是正确的 url 格式
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['url']" />
+                    <br />
+                </td>
+                <td>
+                    必须是合法的身份证号码(中国)格式
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['idCard']" />
+                    <br />
+                </td>
+            </tr>
+            <tr style="height:70px;">
+                <td>
+                    必须是合法的整数格式
+                    <br />
+                    <input class="easyui-validatebox" type="text" value="" data-options="validType:['integer']" />
+                    <br />
+                </td>
+                <td>
+                    必须是合法的整数格式且值介于 10 与 21 之间
+                    <br />
+                    <input id="v15" class="easyui-validatebox" type="text" value="" />
+                    <br />
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <input id="v16" type="text" value="matrixkey" />
+                </td>
+                <td>
+                    <input id="v17" class="easyui-validatebox" type="text" value="" /> 输入左边输入框中一模一样的内容
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

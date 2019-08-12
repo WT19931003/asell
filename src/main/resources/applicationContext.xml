@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/data/jpa  http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+">
+
+    <!-- 扫描service包 -->
+    <context:component-scan base-package="cn.itsource.aisell.service" />
+    <!-- 拿到连接数据库的数据 -->
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    <!--
+        jdbc.properties -> dataSource(数据源)
+            -> EntityManagerFactory -> DAO -> Service -> Controller ->EasyUI
+     -->
+
+    <!-- 配置一个dbcp的数据源 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+
+    <!-- 配置一个EntityManagerFactory -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <!-- 配置数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 扫描包（JPA的支持） -->
+        <property name="packagesToScan" value="cn.itsource.aisell.domain" />
+        <!--
+            Adapter:适配器 -> 确定你要用哪一种实现来完成功能适配
+                咱们要集成JPA -> JPA是有很多种实现(不止一种)
+                HibernateJpaVendorAdapter:用的hibernate适配器
+        -->
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <!-- 方言 -->
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
+                <!-- 是否显示sql -->
+                <property name="showSql" value="true" />
+                <!--
+                    建表策略 true:update false:什么都不做
+                  -->
+                <property name="generateDdl" value="false" />
+            </bean>
+        </property>
+    </bean>
+
+    <!-- 事务的代码(增强) -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    <!-- 支持事务的注解（它会默认去找transactionManager名称的bean） -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <!--
+        配置SpringDataJpa
+            repository:仓库(就是咱们的dao)
+            base-package="cn.itsource.aisell.repository" -> 扫描包
+    -->
+    <jpa:repositories base-package="cn.itsource.aisell.repository"
+        entity-manager-factory-ref="entityManagerFactory"
+                      transaction-manager-ref="transactionManager"
+                      factory-class="cn.itsource.aisell.repository.BaseRepositoryFactoryBean"
+    ></jpa:repositories>
+
+    <!-- 引入shiro的核心配置 -->
+    <import resource="classpath:applicationContext-shiro.xml" />
+    <import resource="classpath:plugin/applicationContext-*.xml" />
+</beans>

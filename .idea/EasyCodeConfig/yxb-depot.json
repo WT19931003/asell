@@ -1,0 +1,45 @@
+{
+  "name" : "Depot",
+  "comment" : null,
+  "fullColumn" : [ {
+    "name" : "id",
+    "comment" : null,
+    "type" : null,
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  }, {
+    "name" : "name",
+    "comment" : null,
+    "type" : "java.lang.String",
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  }, {
+    "name" : "maxcapacity",
+    "comment" : null,
+    "type" : "java.lang.Double",
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  }, {
+    "name" : "currentcapacity",
+    "comment" : null,
+    "type" : "java.lang.Double",
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  }, {
+    "name" : "totalamount",
+    "comment" : null,
+    "type" : "java.lang.Double",
+    "shortType" : null,
+    "custom" : false,
+    "ext" : { }
+  } ],
+  "pkColumn" : null,
+  "otherColumn" : null,
+  "savePackageName" : "cn.itsource.aisell",
+  "savePath" : "./src",
+  "saveModelName" : "aisell"
+}

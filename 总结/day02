@@ -1,0 +1,28 @@
+一.repository:仓库
+    1.1 : 父接口的抽取,由我们自己实现
+        @NoRepositoryBean //jpa不要管我
+        interface BaseRepository<T, ID extends Serializable>  extends JpaRepository<T,ID>,JpaSpecificationExecutor<T>
+    1.2
+        BaseRepositoryImpl<T,ID extends Serializable> extends SimpleJpaRepository<T,ID> implements BaseRepository<T,ID>
+    1.3
+        BaseRepositoryFactoryBean...
+    关键:
+        <jpa:repositories ...  factory-class="cn.itsource.aisell.repository.BaseRepositoryFactoryBean"
+            ></jpa:repositories>
+        EmployeeRepository extends BaseRepository<Employee,Long>
+
+二.service
+    BaseService<T,ID extends Serializable>
+    BaseServiceImpl<T,ID extends Serializable> implements IBaseService<T,ID>
+         @Autowired
+         private BaseRepository<T,ID> baseRepository;
+    IEmployeeService,EmployeeService实现(记住加注解 @Service,还有一个扫描)
+四.controller
+    applicationContext-mvc.xml:配置5大组件
+    web.xml(核心控制器，Spring启动监听器,编码过滤,openSession过滤)
+        noSession -> 配置openSession过滤器
+        noSerializable -> 去掉懒加载中的多余属性(解决方案文档中有)
+五.easyui
+     -> 抽了 head.jsp 【公共的引入都放在里面】
+     -> common.js 【自己的js公共扩展】
+     -> employee.jsp 引入了 /js/model/employee.js 【以后每个都会对应】
